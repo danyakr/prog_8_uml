@@ -13,19 +13,26 @@ actor "Администратор\nЦБС" as Admin
 actor "RAG-система" as RAG <<Внешняя система>>
 
 rectangle "Рекомендательная система книг\n(Telegram Bot ЦБС Петроградского района)" {
+
   package "Авторизация" {
     usecase "Начать работу с ботом\n(/start)" as UC1
     usecase "Зарегистрироваться" as UC2
   }
+
   package "Каталог" {
     usecase "Просмотреть карточку книги" as UC4
     usecase "Фильтровать по жанру / автору" as UC5
+    usecase "Применить фильтры ЦБС\n(наличие, филиал и др.)" as UC9
   }
+
   package "Рекомендации" {
     usecase "Получить рекомендации книг" as UC6
     usecase "Настроить предпочтения" as UC7
     usecase "Просмотреть историю запросов" as UC8
+    usecase "Добавить книгу в избранное" as UC10
+    usecase "Просмотреть избранное" as UC14
   }
+
   package "Администрирование" {
     usecase "Управлять каталогом книг" as UC11
     usecase "Просматривать статистику" as UC12
@@ -33,20 +40,16 @@ rectangle "Рекомендательная система книг\n(Telegram B
   }
 }
 
-' Связи пользователя
+' Пользователь
 User --> UC1
 User --> UC4
 User --> UC5
 User --> UC6
 User --> UC7
 User --> UC8
-
-' Зависимости
-UC1 .> UC2 : <<extend>>
-UC6 .> UC7 : <<extend>>
-
-' RAG-система
-UC6 --> RAG
+User --> UC9
+User --> UC10
+User --> UC14
 
 ' Администратор
 Admin --> UC1
@@ -54,10 +57,19 @@ Admin --> UC11
 Admin --> UC12
 Admin --> UC13
 
+' Зависимости
+UC1 .> UC2 : <<extend>>
+UC6 .> UC7 : <<extend>>
+UC6 .> UC9 : <<extend>>
+UC4 .> UC10 : <<extend>>
+
+' RAG
+UC6 --> RAG
 @enduml
 ```
 
-<img width="752" height="1124" alt="image" src="https://github.com/user-attachments/assets/95c5a72e-a07f-49ac-ae54-eb1c3bbd6244" />
+<img width="814" height="1380" alt="image" src="https://github.com/user-attachments/assets/656060fd-f826-4b20-a0ee-b357074c5e82" />
+
 
 
 # Диаграмма деятельности (activity)
