@@ -197,5 +197,132 @@ stop
 
 <img width="1214" height="2991" alt="image" src="https://github.com/user-attachments/assets/550a338b-56f9-47df-8138-5f2976eb5620" />
 
+# Диаграмма классов (classes)
+
+Архитектура построена по принципу разделения ответственности: Telegram-бот отвечает за взаимодействие с пользователем, RAG-сервис — за генерацию рекомендаций, а база данных — за хранение пользователей, книг и избранного.
+
+```
+@startuml
+class User {
+  +id: int
+  +telegramId: string
+  +preferences: string
+}
+
+class Book {
+  +id: int
+  +title: string
+  +author: string
+  +genre: string
+  +description: string
+  +available: bool
+}
+
+class Favorite {
+  +id: int
+  +userId: int
+  +bookId: int
+}
+
+class Query {
+  +text: string
+  +filters: string
+}
+
+class TelegramBot {
+  +handleStart()
+  +handleQuery()
+  +sendRecommendations()
+}
+
+class RAGService {
+  +retrieve(query)
+  +rank(results)
+  +generateAnswer()
+}
+
+class Database {
+  +saveUser()
+  +saveQuery()
+  +getBooks()
+  +saveFavorite()
+}
+
+' Связи
+User "1" -- "0..*" Favorite
+Book "1" -- "0..*" Favorite
+
+TelegramBot --> RAGService
+TelegramBot --> Database
+RAGService --> Database
+
+TelegramBot --> User
+TelegramBot --> Query
+@enduml
+```
+
+<img width="758" height="496" alt="image" src="https://github.com/user-attachments/assets/84f5615f-616d-4878-886d-303ca5737cf9" />
 
 
+# Диаграмма последовательности (sequence)
+
+Диаграмма отражает взаимодействие между пользователем, ботом, RAG-системой и базой данных в рамках одного запроса рекомендаций.
+
+```
+@startuml
+actor User
+participant "Telegram Bot" as Bot
+participant "RAG-система" as RAG
+database DB
+
+User -> Bot: /start
+Bot -> DB: проверить пользователя
+DB --> Bot: результат
+
+User -> Bot: ввод запроса
+Bot -> DB: получить предпочтения
+Bot -> RAG: отправить запрос
+
+RAG -> DB: поиск книг
+DB --> RAG: список книг
+
+RAG -> RAG: ранжирование
+RAG --> Bot: рекомендации
+
+Bot -> DB: сохранить запрос
+Bot --> User: отправить рекомендации
+
+User -> Bot: добавить в избранное
+Bot -> DB: сохранить книгу
+@enduml
+```
+
+<img width="514" height="603" alt="image" src="https://github.com/user-attachments/assets/b25a8d2a-bd86-4713-a517-bcf55a569f3f" />
+
+
+# Диаграмма состояний (state)
+
+Диаграмма отражает состояния пользователя от момента входа в систему до получения рекомендаций и взаимодействия с ними. Показывает жизненный цикл пользователя в системе
+
+```
+@startuml
+
+[*] --> Неавторизован
+
+Неавторизован --> Авторизован : /start
+
+Авторизован --> ВводЗапроса : начать поиск
+ВводЗапроса --> Обработка : отправка запроса
+Обработка --> ПолучениеРекомендаций : успех
+Обработка --> Ошибка : нет результатов
+
+ПолучениеРекомендаций --> ПросмотрКниги
+ПросмотрКниги --> ДобавлениеВИзбранное
+
+ДобавлениеВИзбранное --> Авторизован
+Ошибка --> ВводЗапроса
+
+@enduml
+```
+
+<img width="426" height="880" alt="image" src="https://github.com/user-attachments/assets/fa89f48b-f514-4116-bfac-4d13bf9a3b7c" />
