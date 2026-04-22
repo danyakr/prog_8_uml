@@ -326,3 +326,12 @@ Bot -> DB: сохранить книгу
 ```
 
 <img width="426" height="880" alt="image" src="https://github.com/user-attachments/assets/fa89f48b-f514-4116-bfac-4d13bf9a3b7c" />
+
+
+# Прототип интерфейса (wireframe)
+
+Прототип отражает пользовательский интерфейс системы рекомендаций книг на основе RAG: от ввода свободного запроса до получения списка релевантных книг и объяснения от LLM. Показывает ключевые экраны, с которыми пользователь работает для решения задачи подбора книги.
+
+https://www.figma.com/proto/evu65LQFKqeuhvvxHQZhj7/%D0%92%D0%9A%D0%A0-%E2%80%94-RAG-Book-Recommender-%E2%80%94-Wireframes?node-id=0-1&t=nsgK4x3n0oGHh9Mm-1
+
+<img width="1287" height="753" alt="image" src="https://github.com/user-attachments/assets/af439460-61a1-4964-96d6-96a4aa2e2b9c" />
